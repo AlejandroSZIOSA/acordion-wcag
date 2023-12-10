@@ -8,18 +8,7 @@
 "use strict";
 
 class Accordion {
-  constructor(domNode) {
-    this.rootEl = domNode;
-    this.buttonEl = this.rootEl.querySelector("button[aria-expanded]");
-
-    const controlsId = this.buttonEl.getAttribute("aria-controls");
-    this.contentEl = document.getElementById(controlsId);
-
-    this.open = this.buttonEl.getAttribute("aria-expanded") === "true";
-
-    // add event listeners
-    this.buttonEl.addEventListener("click", this.onButtonClick.bind(this));
-  }
+  constructor(domNode) {}
 
   onButtonClick() {
     this.toggle(!this.open);
@@ -53,8 +42,32 @@ class Accordion {
   }
 }
 
+function createAccordion(accordionEl) {
+  const rootEl = accordionEl;
+  const buttonEl = rootEl.querySelector("button[aria-expanded]");
+
+  const controlsId = buttonEl.getAttribute("aria-controls");
+  const contentEl = document.getElementById(controlsId);
+
+  let open = buttonEl.getAttribute("aria-expanded") === "true";
+
+  function onButtonClick(e) {
+    open = !open;
+    buttonEl.setAttribute("aria-expanded", `${open}`);
+    if (open) {
+      contentEl.removeAttribute("hidden");
+    } else {
+      contentEl.setAttribute("hidden", "");
+    }
+  }
+
+  // add event listeners
+  buttonEl.addEventListener("click", onButtonClick);
+}
+
 // init accordions
 const accordions = document.querySelectorAll(".accordion h3");
 accordions.forEach((accordionEl) => {
-  new Accordion(accordionEl);
+  //new Accordion(accordionEl);
+  createAccordion(accordionEl);
 });
